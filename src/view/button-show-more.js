@@ -1,31 +1,17 @@
-import { createElement } from '../render.js';
-const createShowMoreTemplate = () => `<section class="films">
-<section class="films-list">
-  <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+import View from './view-class';
 
-  <div class="films-list__container"></div>
+const createShowMoreButtonTemplate = () =>
+  `<button class="films-list__show-more">Show more
+  </button>`;
 
+export default class ButtonShowMore extends View {
 
-  <button class="films-list__show-more">Show more</button>
-</section>
-
-</section>`;
-
-
-export default class ShowMore {
-  getTemplate() {
-    return createShowMoreTemplate();
+  constructor() {
+    super();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
+  get template() {
+    return createShowMoreButtonTemplate();
   }
 
-  removeElement() {
-    this.element = null;
-  }
 }
