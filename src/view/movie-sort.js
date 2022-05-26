@@ -1,26 +1,21 @@
-import { createElement } from '../render.js';
+import View from './view-class';
 
-const createMovieSortTemplate = () => `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`;
+const createSortTemplate = () =>
+  `<ul class="sort">
+<li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
+<li><a href="#" class="sort__button">Sort by date</a></li>
+<li><a href="#" class="sort__button">Sort by rating</a></li>
+</ul>`;
 
+export default class MovieSort extends View {
 
-export default class MovieSort {
-  getTemplate() {
-    return createMovieSortTemplate();
+  constructor() {
+    super();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
+  get template() {
+    return createSortTemplate();
   }
 
-  removeElement() {
-    this.element = null;
-  }
 }
+
