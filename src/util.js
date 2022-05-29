@@ -17,12 +17,12 @@ const generateRandomElement = (array) => {
   return array[randomIndex];
 };
 
-// const generateDate = () => {
-//   const daysGap = getRandomInteger(-1, -60);
+const generateDate = () => {
+  const daysGap = getRandomInteger(-1, -60);
 
-//   return dayjs().add(daysGap, 'day').toDate();
-// };
-
+  return dayjs().add(daysGap, 'day').toDate();
+};
+const keydownEscape = (evt) => evt.key === 'Esc' || evt.key === 'Escape';
 
 // const getDateForComment = (date) => {
 //   const dateInner = dayjs(date);
@@ -49,9 +49,21 @@ const humanizeReleaseDate = (dueDate, dateFormat) => dayjs(dueDate).format(dateF
 
 // функция перевода минут в часы и минуты
 const getRuntimeFromMins = (mins) => {
-  const hour = Math.trunc(mins/60);
+  const hour = Math.trunc(mins / 60);
   const min = mins % 60;
   return `${hour}h ${min}m`;
 };
+// const getRuntimeFromMins = (duration) => {
+//   const hours = Math.floor(duration / 60);
+//   const minutes = duration % 60;
+//   return hours >= 1 ? `${hours}h ${minutes}m` : `${minutes}m`;
+// };
 
-export {getRandomInteger, humanizeReleaseDate, getRuntimeFromMins, generateRandomElement};
+export {
+  getRandomInteger,
+  humanizeReleaseDate,
+  getRuntimeFromMins,
+  generateRandomElement,
+  keydownEscape,
+  generateDate
+};

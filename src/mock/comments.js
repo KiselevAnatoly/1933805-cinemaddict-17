@@ -1,5 +1,7 @@
 import { getRandomInteger, generateRandomElement } from '../util';
 
+const MAX_ID = 4;
+
 const COMMENT_EMOTIONS = [
   'smile',
   'sleeping',
@@ -26,10 +28,11 @@ const COMMENT_DATES = [
   '2014-11-10T15:23:40.554Z',
   '2022-10-15T17:33:15.554Z'];
 export const generateComment = () => ({
-  id: getRandomInteger(0, 4),
+  id: getRandomInteger(0,MAX_ID ),
   author: generateRandomElement(COMMENT_AUTORS),
   comment: generateRandomElement(COMMENT_TEXTS),
   date: generateRandomElement(COMMENT_DATES),
   emotion: generateRandomElement(COMMENT_EMOTIONS)
 }
 );
+export {MAX_ID};
