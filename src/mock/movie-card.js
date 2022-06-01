@@ -53,24 +53,38 @@ const MOVIE_DIRECTOR = [
   'Martin Scorsese',
   'Peter Jackson'
 ];
+const COUNTRY = [
+  'Russian',
+  'Finland',
+  'USA',
+  'Italy',
+  'India'
+];
+const AGE_RATING = [
+  '0+',
+  '6+',
+  '12+',
+  '16+',
+  '18+'
+];
 
 export const generateMovie = () => ({
   id: getRandomInteger(0, MAX_ID),
   commentCount: '0',
   filmInfo: {
     title: generateRandomElement(MOVIE_TITLES),
-    alternativeTitle: 'The Man with the Golden Arm',
+    alternativeTitle: generateRandomElement(MOVIE_TITLES),
     totalRating: 5.3,
     poster: generateRandomElement(MOVIE_POSTERS),
-    ageRating: 0,
+    ageRating: generateRandomElement(AGE_RATING),
     director: generateRandomElement(MOVIE_DIRECTOR),
     writers: generateRandomElement(MOVIE_WRITERS),
     actors: generateRandomElement(MOVIE_ACTORS),
     release: {
       date: generateDate(),
-      releaseCountry: 'Russian'
+      releaseCountry: generateRandomElement(COUNTRY),
     },
-    runtime: 57,
+    runtime: 77,
     genre: generateRandomElement(GENRES),
     description: generateRandomElement(MOVIE_DESCRIPTIONS)
   },

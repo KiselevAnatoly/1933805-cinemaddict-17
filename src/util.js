@@ -1,5 +1,12 @@
 
 import dayjs from 'dayjs';
+const SIXTY = 60;
+// функция перевода минут в часы и минуты
+const getRuntimeFromMins = (mins) => {
+  const hour = Math.trunc(mins / SIXTY);
+  const min = mins % SIXTY;
+  return `${hour}h ${min}m`;
+};
 
 // генерация случайного числа с интервалом
 const getRandomInteger = (a = 0, b = 1) => {
@@ -18,7 +25,7 @@ const generateRandomElement = (array) => {
 };
 
 const generateDate = () => {
-  const daysGap = getRandomInteger(-1, -60);
+  const daysGap = getRandomInteger(1, SIXTY) * -1;
 
   return dayjs().add(daysGap, 'day').toDate();
 };
@@ -47,17 +54,6 @@ const humanizeReleaseDate = (dueDate, dateFormat) => dayjs(dueDate).format(dateF
 //const gethumanDate2 = (date) => dayjs(date).format('D MMMM YYYY');
 //const gethumanDate3 = (date) => dayjs(date).format('YYYY/mm/DD hh:mm');
 
-// функция перевода минут в часы и минуты
-const getRuntimeFromMins = (mins) => {
-  const hour = Math.trunc(mins / 60);
-  const min = mins % 60;
-  return `${hour}h ${min}m`;
-};
-// const getRuntimeFromMins = (duration) => {
-//   const hours = Math.floor(duration / 60);
-//   const minutes = duration % 60;
-//   return hours >= 1 ? `${hours}h ${minutes}m` : `${minutes}m`;
-// };
 
 export {
   getRandomInteger,
