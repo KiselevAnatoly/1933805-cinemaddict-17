@@ -1,5 +1,12 @@
 
 import dayjs from 'dayjs';
+const SIXTY = 60;
+// функция перевода минут в часы и минуты
+const getRuntimeFromMins = (mins) => {
+  const hour = Math.trunc(mins / SIXTY);
+  const min = mins % SIXTY;
+  return `${hour}h ${min}m`;
+};
 
 // генерация случайного числа с интервалом
 const getRandomInteger = (a = 0, b = 1) => {
@@ -17,12 +24,12 @@ const generateRandomElement = (array) => {
   return array[randomIndex];
 };
 
-// const generateDate = () => {
-//   const daysGap = getRandomInteger(-1, -60);
+const generateDate = () => {
+  const daysGap = getRandomInteger(1, SIXTY) * -1;
 
-//   return dayjs().add(daysGap, 'day').toDate();
-// };
-
+  return dayjs().add(daysGap, 'day').toDate();
+};
+const keydownEscape = (evt) => evt.key === 'Esc' || evt.key === 'Escape';
 
 // const getDateForComment = (date) => {
 //   const dateInner = dayjs(date);
@@ -47,11 +54,12 @@ const humanizeReleaseDate = (dueDate, dateFormat) => dayjs(dueDate).format(dateF
 //const gethumanDate2 = (date) => dayjs(date).format('D MMMM YYYY');
 //const gethumanDate3 = (date) => dayjs(date).format('YYYY/mm/DD hh:mm');
 
-// функция перевода минут в часы и минуты
-const getRuntimeFromMins = (mins) => {
-  const hour = Math.trunc(mins/60);
-  const min = mins % 60;
-  return `${hour}h ${min}m`;
-};
 
-export {getRandomInteger, humanizeReleaseDate, getRuntimeFromMins, generateRandomElement};
+export {
+  getRandomInteger,
+  humanizeReleaseDate,
+  getRuntimeFromMins,
+  generateRandomElement,
+  keydownEscape,
+  generateDate
+};

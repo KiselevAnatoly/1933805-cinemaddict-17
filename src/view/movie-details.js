@@ -2,7 +2,7 @@ import View from './view-class';
 import { humanizeReleaseDate, getRuntimeFromMins } from '../util';
 
 const createMovieDetailsTemplate = (film) => {
-  const {title, alternativeTitle, totalRating, poster, description, director, writers, actors, release, runtime, genre} = film.filmInfo;
+  const {title, alternativeTitle, ageRating, totalRating, poster, description, director, writers, actors, release, runtime, genre} = film.filmInfo;
 
   const releaseDate = release.date !== null
     ? humanizeReleaseDate(release.date, 'D MMMM YYYY')
@@ -19,7 +19,7 @@ const createMovieDetailsTemplate = (film) => {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
 
-          <p class="film-details__age">18+</p>
+          <p class="film-details__age">${ageRating}</p>
         </div>
 
         <div class="film-details__info">
