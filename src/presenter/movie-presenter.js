@@ -10,7 +10,9 @@ import ButtonShowMore from '../view/button-show-more';
 import MovieDetails from '../view/movie-details';
 import MoviePopupComment from '../view/movie-popup-comment';
 import { keydownEscape } from '../util';
+import EmptyMovieList from '../view/empty-list-template ';
 
+const MOVIE_COUNT_STEP = 5;
 
 const getIdFilteredArray = (filmiD, commentsArray) => {
   const fillteredArray = commentsArray.filter((item) => item.id === filmiD);
@@ -22,14 +24,13 @@ export default class FilmSectionPresenter {
   #filmContainer = new MovieView();
   #filmList = new MovieList();
   #filmListContainer = new MovieListContainer();
-  // #popupComponent = new MovieDetails();
-
+  #showMoreMovieComponent = new ButtonShowMore();
   #mainBlock = null;
   #filmsModel = null;
   #filmsList = null;
   #commentList = null;
+  #renderedFilmCount = MOVIE_COUNT_STEP;
   #filteredArray = null;
-
 
   init = (mainBlock, filmsModel) => {
 
@@ -41,17 +42,43 @@ export default class FilmSectionPresenter {
     render(this.#filmContainer, this.#mainBlock);
     render(this.#filmList, this.#filmContainer.element);
     render(this.#filmListContainer, this.#filmList.element);
-    render(new ButtonShowMore(), this.#filmContainer.element);
-
     render(new MovieRated(), this.#filmContainer.element);
     render(new MovieCommented(), this.#filmContainer.element);
 
-    for (let i = 0; i < this.#filmsList.length; i++) {
-      this.#filmsList[i].id = i;
-      this.#filteredArray = getIdFilteredArray(this.#filmsList[i].id, this.#commentList);
-      this.#renderFilms(this.#filmsList[i], this.#filteredArray);
+    if (this.#filmsList.length === 0) {
+      render(new EmptyMovieList, this.#filmListContainer.element);
+    } else {
+
+      for (let i = 0; i < this.#filmsList.length; i++) {
+        this.#filmsList[i].id = i;
+      }
+
+
+      for (let i = 0; i < Math.min(this.#filmsList.length, MOVIE_COUNT_STEP); i++) {
+        this.#renderFilms(this.#filmsList[i], this.#commentList);
+      }
+
+      if (this.#filmsList.length > MOVIE_COUNT_STEP) {
+        render(this.#showMoreMovieComponent, this.#filmList.element);
+        this.#showMoreMovieComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+      }
+
     }
 
+  };
+
+  #handleShowMoreButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#filmsList
+      .slice(this.#renderedFilmCount, (this.#renderedFilmCount + MOVIE_COUNT_STEP))
+      .forEach((film) => this.#renderFilms(film, this.#commentList));
+
+    this.#renderedFilmCount += MOVIE_COUNT_STEP;
+
+    if (this.#renderedFilmCount >= this.#filmsList.length) {
+      this.#showMoreMovieComponent.element.remove();
+      this.#showMoreMovieComponent.removeElement();
+    }
   };
 
   #renderFilms = (film, commentsArray) => {
@@ -68,9 +95,9 @@ export default class FilmSectionPresenter {
 
       const popupComponent = new MovieDetails(film);
       render(popupComponent, document.querySelector('body'));
-      // render(this.#popupComponent, this.#popupComponent.element);
 
       const escKeyDown = (evt) => {
+
         if (keydownEscape(evt)) {
           closeClearFun();
         }
@@ -78,32 +105,24 @@ export default class FilmSectionPresenter {
 
       const closeButtonClick = () => {
         closeClearFun();
-      };
 
+      };
       function closeClearFun() {
-        // this.#popupComponent.element.remove();
         popupComponent.element.remove();
         document.body.classList.remove('hide-overflow');
         document.removeEventListener('keydown', escKeyDown);
-
       }
+      this.#filteredArray = getIdFilteredArray(film.id, commentsArray);
+
       commentsArray.forEach((elem) => {
         render(new MoviePopupComment(elem), popupComponent.element.querySelector('.film-details__comments-list'));
       });
-      //   render(new MoviePopupComment(elem), this.#popupComponent.element.querySelector('.film-details__comments-list'));
-
-      // });
 
       popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', closeButtonClick);
       document.addEventListener('keydown', escKeyDown);
     };
 
-    //   this.#popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', closeButtonClick);
-    //   document.addEventListener('keydown', escKeyDown);
-    // };
-
-
-    filmCardComponent.element.addEventListener('click', renderPopup);
+    filmCardComponent.element.querySelector('.film-card__link').addEventListener('click', renderPopup);
 
   };
 }
