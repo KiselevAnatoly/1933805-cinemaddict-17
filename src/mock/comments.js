@@ -1,6 +1,6 @@
 import { getRandomInteger, generateRandomElement } from '../util';
 
-const MAX_ID = 4;
+const MAX_ID = 17;
 
 const COMMENT_EMOTIONS = [
   'smile',
