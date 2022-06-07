@@ -1,5 +1,5 @@
 
-import { render } from '../render';
+import {render, remove} from '../framework/render';
 import MovieView from '../view/movie-films';
 import MovieList from '../view/movie-list';
 import MovieListContainer from '../view/movie-container';
@@ -76,8 +76,7 @@ export default class FilmSectionPresenter {
     this.#renderedFilmCount += MOVIE_COUNT_STEP;
 
     if (this.#renderedFilmCount >= this.#filmsList.length) {
-      this.#showMoreMovieComponent.element.remove();
-      this.#showMoreMovieComponent.removeElement();
+      remove(this.#showMoreMovieComponent);
     }
   };
 
@@ -99,11 +98,13 @@ export default class FilmSectionPresenter {
       const escKeyDown = (evt) => {
 
         if (keydownEscape(evt)) {
+          remove(popupComponent);
           closeClearFun();
         }
       };
 
       const closeButtonClick = () => {
+        remove(popupComponent);
         closeClearFun();
 
       };
@@ -118,11 +119,11 @@ export default class FilmSectionPresenter {
         render(new MoviePopupComment(elem), popupComponent.element.querySelector('.film-details__comments-list'));
       });
 
-      popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', closeButtonClick);
+      popupComponent.CloseButtonHandler(closeButtonClick);
       document.addEventListener('keydown', escKeyDown);
     };
 
-    filmCardComponent.element.querySelector('.film-card__link').addEventListener('click', renderPopup);
+    filmCardComponent.FilmHandler(renderPopup);
 
   };
 }

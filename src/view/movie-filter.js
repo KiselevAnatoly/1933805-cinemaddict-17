@@ -1,5 +1,5 @@
-import View from './view-class';
 
+import AbstractView from '../framework/view/abstract-view';
 const createNavigationTemplate = () =>
   `<nav class="main-navigation">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
@@ -8,11 +8,7 @@ const createNavigationTemplate = () =>
    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
   </nav>`;
 
-export default class MovieNavigation extends View {
-
-  constructor() {
-    super();
-  }
+export default class MovieNavigation extends AbstractView {
 
   get template() {
     return createNavigationTemplate();

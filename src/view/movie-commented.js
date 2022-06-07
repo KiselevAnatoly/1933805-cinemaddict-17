@@ -1,5 +1,5 @@
-import View from './view-class';
 
+import AbstractView from '../framework/view/abstract-view';
 const createMovieCommented = () =>
   `<section class="films-list films-list--extra">
   <h2 class="films-list__title">Most commented</h2>
@@ -48,11 +48,7 @@ const createMovieCommented = () =>
 </section>
 </section>`;
 
-export default class MovieCommented extends View {
-
-  constructor() {
-    super();
-  }
+export default class MovieCommented extends AbstractView {
 
   get template() {
     return createMovieCommented();
