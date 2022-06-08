@@ -1,5 +1,5 @@
 import MovieNavigation from './view/movie-filter';
-import { render } from './render';
+import {render} from './framework/render';
 import MovieSort from './view/movie-sort';
 import UserRaiting from './view/user-raiting';
 import FilmSectionPresenter from './presenter/movie-presenter';

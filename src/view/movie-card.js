@@ -1,4 +1,5 @@
-import View from './view-class';
+// import View from './view-class';
+import AbstractView from '../framework/view/abstract-view';
 import { humanizeReleaseDate, getRuntimeFromMins } from '../util';
 
 
@@ -33,7 +34,7 @@ const createMovieCard = (film) => {
 
 };
 
-export default class MovieCard extends View {
+export default class MovieCard extends AbstractView {
 
   constructor(film) {
     super();
@@ -43,5 +44,15 @@ export default class MovieCard extends View {
   get template() {
     return createMovieCard(this.film);
   }
+
+  FilmHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#FilmclickHandler);
+  };
+
+  #FilmclickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
 
 }

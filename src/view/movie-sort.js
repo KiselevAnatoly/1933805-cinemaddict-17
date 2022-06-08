@@ -1,5 +1,5 @@
-import View from './view-class';
 
+import AbstractView from '../framework/view/abstract-view';
 const createSortTemplate = () =>
   `<ul class="sort">
 <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
@@ -7,11 +7,7 @@ const createSortTemplate = () =>
 <li><a href="#" class="sort__button">Sort by rating</a></li>
 </ul>`;
 
-export default class MovieSort extends View {
-
-  constructor() {
-    super();
-  }
+export default class MovieSort extends AbstractView {
 
   get template() {
     return createSortTemplate();
