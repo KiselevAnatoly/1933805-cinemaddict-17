@@ -135,12 +135,12 @@ export default class MovieDetails extends AbstractView {
   }
 
 
-  CloseButtonHandler = (callback) => {
+  closeButtonHandler = (callback) => {
     this._callback.click = callback;
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#CloseButtonHandler);
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeButtonHandler);
   };
 
-  #CloseButtonHandler = (evt) => {
+  #closeButtonHandler = (evt) => {
     evt.preventDefault();
     this._callback.click();
   };

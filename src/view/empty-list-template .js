@@ -6,9 +6,6 @@ const createEmptyMovieListTemplate = () =>
 
 export default class EmptyMovieList extends AbstractView {
 
-  constructor() {
-    super();
-  }
 
   get template() {
     return createEmptyMovieListTemplate();
