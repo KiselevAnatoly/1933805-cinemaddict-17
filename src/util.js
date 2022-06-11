@@ -47,7 +47,7 @@ const keydownEscape = (evt) => evt.key === 'Esc' || evt.key === 'Escape';
 
 //   return dayjs(date).format('YYYY/MM/DD HH:MM');
 // };
-
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 /// функции отображения дат в разных форматах
 const humanizeReleaseDate = (dueDate, dateFormat) => dayjs(dueDate).format(dateFormat);
 //const getHumanDate = (date) => dayjs(date).format('DD MMMM YYYY');
@@ -61,5 +61,6 @@ export {
   getRuntimeFromMins,
   generateRandomElement,
   keydownEscape,
-  generateDate
+  generateDate,
+  updateItem
 };

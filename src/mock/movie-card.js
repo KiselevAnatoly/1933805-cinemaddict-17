@@ -1,6 +1,7 @@
 
+import { nanoid } from 'nanoid';
 import { generateRandomElement, getRandomInteger, generateDate,} from '../util';
-import { MAX_ID } from './comments';
+// import { MAX_ID } from './comments';
 
 const MOVIE_POSTERS = [
   'the-dance-of-life.jpg',
@@ -69,8 +70,7 @@ const AGE_RATING = [
 ];
 
 export const generateMovie = () => ({
-  id: getRandomInteger(0, MAX_ID),
-  commentCount: '0',
+  id: nanoid() ,// getRandomInteger(0, MAX_ID),
   filmInfo: {
     title: generateRandomElement(MOVIE_TITLES),
     alternativeTitle: generateRandomElement(MOVIE_TITLES),
@@ -86,7 +86,8 @@ export const generateMovie = () => ({
     },
     runtime: 77,
     genre: generateRandomElement(GENRES),
-    description: generateRandomElement(MOVIE_DESCRIPTIONS)
+    description: generateRandomElement(MOVIE_DESCRIPTIONS),
+    commentCount: getRandomInteger(0, 100)
   },
   userDetails: {
     watchlist: Boolean(getRandomInteger(0, 1)),
