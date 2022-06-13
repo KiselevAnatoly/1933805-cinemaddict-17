@@ -8,34 +8,27 @@ const createNavigationTemplate = (watchlistCount, historyCount, favoritesCount) 
 </nav>`;
 
 export default class MovieNavigation extends AbstractView {
-  #watchlistCount;
-  #historyCount;
-  #favoritesCount;
+  #watchlistCount= null;
+  #historyCount=null;
+  #favoritesCount=null;
 
   constructor(filmList) {
     super();
     this.filmList = filmList;
 
-    let watchListCounter = 0;
-    let historyCounter = 0;
-    let favoritesCounter = 0;
-
     for (let i = 0; i < this.filmList.length; i++) {
       const movie = this.filmList[i];
       if (movie.userDetails.watchlist) {
-        watchListCounter++;
+        this.#watchlistCount++;
       }
       if (movie.userDetails.alreadyWatched) {
-        historyCounter++;
+        this.#historyCount++;
       }
       if (movie.userDetails.favorite) {
-        favoritesCounter++;
+        this.#favoritesCount++;
       }
     }
 
-    this.#watchlistCount = watchListCounter;
-    this.#historyCount = historyCounter;
-    this.#favoritesCount = favoritesCounter;
   }
 
   get template() {
