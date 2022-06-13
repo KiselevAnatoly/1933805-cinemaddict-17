@@ -4,9 +4,10 @@ import MovieList from '../view/movie-list';
 import MovieRated from '../view/movie-rated';
 import MovieCommented from '../view/movie-commented';
 import ButtonShowMore from '../view/button-show-more';
-import EmptyMovieList from '../view/empty-list-template ';
 import MovieNavigation from '../view/movie-filter';
 import MovieSort from '../view/movie-sort';
+
+import MovieListContainer from '../view/movie-container';
 
 import { updateItem } from '../util';
 import FilmPresenter from './movie-presenter2';
@@ -49,7 +50,7 @@ export default class FilmSectionPresenter {
 
 
     if (this.#filmsList.length === 0) {
-      render(new EmptyMovieList, this.#filmListContainer.element);
+      render(new MovieListContainer, this.#filmListContainer.element);
     } else {
 
       for (let i = 0; i < this.#filmsList.length; i++) {
