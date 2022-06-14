@@ -19,11 +19,13 @@ export default class FilmPresenter {
   #popupComponent;
   #filmItem;
   #containerBlock;
+  #updateMainNav;
 
-  constructor(commentList, changeData, containerBlock) {
+  constructor(commentList, changeData, containerBlock, updateMainNav) {
     this.#commentList = commentList;
     this.#changeData = changeData;
     this.#containerBlock = containerBlock;
+    this.#updateMainNav = updateMainNav;
   }
 
   init = (film) => {
@@ -35,9 +37,9 @@ export default class FilmPresenter {
     this.#filmCardComponent = new MovieCard(film);
 
     this.#filmCardComponent.setFilmClickHandler(this.#onCardClick);
-    this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchListClick);
-    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
-    this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteWatchedClick);
+    this.#filmCardComponent.setWatchlistClickHandler(this.#handleControlClick);
+    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleControlClick);
+    this.#filmCardComponent.setFavoriteClickHandler(this.#handleControlClick);
 
     if(!prevFilmCardComponent) {
       render(this.#filmCardComponent, this.#containerBlock);
@@ -51,6 +53,15 @@ export default class FilmPresenter {
 
   };
 
+  destroy = () => {
+    remove(this.#filmCardComponent);
+  };
+
+  copyItem = (anoyherTops) => {
+    render(this.#filmCardComponent, anoyherTops);
+  };
+
+
   #onCardClick = () => {
     if(document.querySelector('.film-details')) {
       document.querySelector('.film-details').remove();
@@ -63,9 +74,9 @@ export default class FilmPresenter {
     document.body.classList.add('hide-overflow');
 
     this.#popupComponent = new MovieDetails(this.#filmItem);
-    this.#popupComponent.setWatchlistClickHandler(this.#handleWatchListClick);
-    this.#popupComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
-    this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteWatchedClick);
+    this.#popupComponent.setWatchlistClickHandler(this.#handleControlClick);
+    this.#popupComponent.setAlreadyWatchedClickHandler(this.#handleControlClick);
+    this.#popupComponent.setFavoriteClickHandler(this.#handleControlClick);
 
     render(this.#popupComponent, document.querySelector('body'));
 
@@ -94,16 +105,9 @@ export default class FilmPresenter {
   };
 
 
-  #handleWatchListClick  = () => {
-    this.#changeData({...this.#filmItem, userDetails: {...this.#filmItem.userDetails, watchlist: !this.#filmItem.userDetails.watchlist}});
-  };
-
-  #handleAlreadyWatchedClick = () => {
-    this.#changeData({...this.#filmItem, userDetails: {...this.#filmItem.userDetails, alreadyWatched: !this.#filmItem.userDetails.alreadyWatched}});
-  };
-
-  #handleFavoriteWatchedClick = () => {
-    this.#changeData({...this.#filmItem, userDetails: {...this.#filmItem.userDetails, favorite: !this.#filmItem.userDetails.favorite}});
+  #handleControlClick = (controlName) => {
+    this.#changeData({...this.#filmItem, userDetails: {...this.#filmItem.userDetails, [controlName]: !this.#filmItem.userDetails[controlName]}});
+    this.#updateMainNav();
   };
 
 }

@@ -7,7 +7,8 @@ import MovieModel from './model/movie-card-model';
 const movieModel = new MovieModel();
 const mainBlock = document.querySelector('.main');
 const header = document.querySelector('.header');
-const filmSectionPresenter = new FilmSectionPresenter();
+
+const filmSectionPresenter = new FilmSectionPresenter(mainBlock, movieModel);
 
 render(new UserRaiting(), header);
 

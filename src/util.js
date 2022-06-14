@@ -25,7 +25,7 @@ const generateRandomElement = (array) => {
 };
 
 const generateDate = () => {
-  const daysGap = getRandomInteger(1, SIXTY) * -1;
+  const daysGap = getRandomInteger(-1, -10000);
 
   return dayjs().add(daysGap, 'day').toDate();
 };
@@ -53,7 +53,27 @@ const humanizeReleaseDate = (dueDate, dateFormat) => dayjs(dueDate).format(dateF
 //const getHumanDate = (date) => dayjs(date).format('DD MMMM YYYY');
 //const gethumanDate2 = (date) => dayjs(date).format('D MMMM YYYY');
 //const gethumanDate3 = (date) => dayjs(date).format('YYYY/mm/DD hh:mm');
+const getWeightForNullDate = (dateA, dateB) => {
+  if (dateA === null && dateB === null) {
+    return 0;
+  }
 
+  if (dateA === null) {
+    return 1;
+  }
+
+  if (dateB === null) {
+    return -1;
+  }
+
+  return null;
+};
+
+const sortFilm = (filmA, filmB) => {
+  const weight = getWeightForNullDate(filmA.filmInfo.release.date, filmB.filmInfo.release.date);
+
+  return weight ?? dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
+};
 
 export {
   getRandomInteger,
@@ -62,5 +82,6 @@ export {
   generateRandomElement,
   keydownEscape,
   generateDate,
-  updateItem
+  updateItem,
+  sortFilm,
 };
