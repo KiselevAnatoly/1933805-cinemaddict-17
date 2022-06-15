@@ -37,3 +37,5 @@ export default class MovieSort extends AbstractView {
 
 }
 
+
+export{SortType,MovieSort};

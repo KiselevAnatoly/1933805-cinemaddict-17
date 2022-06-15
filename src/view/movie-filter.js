@@ -1,5 +1,6 @@
 
 import AbstractView from '../framework/view/abstract-view';
+
 const createNavigationTemplate = (watchlistCount, historyCount, favoritesCount) =>  `<nav class="main-navigation">
 <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
 <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${watchlistCount}</span></a>

@@ -74,7 +74,7 @@ export const generateMovie = () => ({
   filmInfo: {
     title: generateRandomElement(MOVIE_TITLES),
     alternativeTitle: generateRandomElement(MOVIE_TITLES),
-    totalRating: 5.3,
+    totalRating: getRandomInteger(0, 100) / 10,
     poster: generateRandomElement(MOVIE_POSTERS),
     ageRating: generateRandomElement(AGE_RATING),
     director: generateRandomElement(MOVIE_DIRECTOR),
