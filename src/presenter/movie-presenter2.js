@@ -1,7 +1,6 @@
 import MovieCard from '../view/movie-card';
 import MovieDetails from '../view/movie-details';
-import MoviePopupComment from '../view/movie-popup-comment';
-import {render, remove, replace} from '../framework/render';
+import { render, remove, replace } from '../framework/render';
 import { keydownEscape } from '../util';
 
 const getIdFilteredArray = (filmiD, commentsArray) => {
@@ -41,12 +40,12 @@ export default class FilmPresenter {
     this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleControlClick);
     this.#filmCardComponent.setFavoriteClickHandler(this.#handleControlClick);
 
-    if(!prevFilmCardComponent) {
+    if (!prevFilmCardComponent) {
       render(this.#filmCardComponent, this.#containerBlock);
       return;
     }
 
-    if(this.#containerBlock.contains(prevFilmCardComponent.element)) {
+    if (this.#containerBlock.contains(prevFilmCardComponent.element)) {
       replace(this.#filmCardComponent, prevFilmCardComponent);
     }
     remove(prevFilmCardComponent);
@@ -63,7 +62,7 @@ export default class FilmPresenter {
 
 
   #onCardClick = () => {
-    if(document.querySelector('.film-details')) {
+    if (document.querySelector('.film-details')) {
       document.querySelector('.film-details').remove();
     }
     this.#renderPopup();
@@ -72,8 +71,8 @@ export default class FilmPresenter {
   #renderPopup = () => {
 
     document.body.classList.add('hide-overflow');
-
-    this.#popupComponent = new MovieDetails(this.#filmItem);
+    const filteredArray = getIdFilteredArray(this.#filmItem.id, this.#commentList);
+    this.#popupComponent = new MovieDetails(this.#filmItem, filteredArray);
     this.#popupComponent.setWatchlistClickHandler(this.#handleControlClick);
     this.#popupComponent.setAlreadyWatchedClickHandler(this.#handleControlClick);
     this.#popupComponent.setFavoriteClickHandler(this.#handleControlClick);
@@ -81,7 +80,7 @@ export default class FilmPresenter {
     render(this.#popupComponent, document.querySelector('body'));
 
     const onEscKeyDown = (evt) => {
-      if(keydownEscape(evt)) {
+      if (keydownEscape(evt)) {
         remove(this.#popupComponent);
         document.body.classList.remove('hide-overflow');
         document.removeEventListener('keydown', onEscKeyDown);
@@ -94,19 +93,13 @@ export default class FilmPresenter {
       document.removeEventListener('keydown', onEscKeyDown);
     };
 
-    this.#filteredArray = getIdFilteredArray(this.#filmItem.id, this.#commentList);
-
-    for (let i = 0; i < this.#filteredArray.length; i++) {
-      render( new MoviePopupComment (this.#filteredArray[i]), this.#popupComponent.element.querySelector('.film-details__comments-list'));
-    }
-
     this.#popupComponent.setCloseButtonClickHandler(onCloseButtonClick);
     document.addEventListener('keydown', onEscKeyDown);
+
   };
 
-
   #handleControlClick = (controlName) => {
-    this.#changeData({...this.#filmItem, userDetails: {...this.#filmItem.userDetails, [controlName]: !this.#filmItem.userDetails[controlName]}});
+    this.#changeData({ ...this.#filmItem, userDetails: { ...this.#filmItem.userDetails, [controlName]: !this.#filmItem.userDetails[controlName] } });
     this.#updateMainNav();
   };
 
