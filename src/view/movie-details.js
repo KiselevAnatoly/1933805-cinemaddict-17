@@ -16,7 +16,7 @@ const createMovieDetailsTemplate = (film,filteredCommentsArray) => {
 
   const createReactionImage = (emoji) => `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">`;
 
-  const renderComemnts = filteredCommentsArray.map((comment) =>  new MoviePopupComment(comment).template).join('');
+  const renderComments = filteredCommentsArray.map((comment) =>  new MoviePopupComment(comment).template).join('');
 
   return (
     `<section class="film-details">
@@ -95,7 +95,7 @@ const createMovieDetailsTemplate = (film,filteredCommentsArray) => {
 
 
         <ul class="film-details__comments-list">
-        ${renderComemnts}
+        ${renderComments}
         </ul>
 
         <div class="film-details__new-comment">
