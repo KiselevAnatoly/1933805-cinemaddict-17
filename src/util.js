@@ -1,6 +1,8 @@
 
 import dayjs from 'dayjs';
 const SIXTY = 60;
+import { FilterType } from './const';
+
 // функция перевода минут в часы и минуты
 const getRuntimeFromMins = (mins) => {
   const hour = Math.trunc(mins / SIXTY);
@@ -75,6 +77,12 @@ const sortFilm = (filmA, filmB) => {
   return weight ?? dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
 };
 
+const filter = {
+  [FilterType.ALL]: (arr) => arr,
+  [FilterType.WATCH_LIST]: (arr) => arr.filter((film) => film.userDetails.watchlist),
+  [FilterType.HISTORY]: (arr) => arr.filter((film) => film.userDetails.alreadyWatched),
+  [FilterType.FAVORITES]: (arr) => arr.filter((film) => film.userDetails.favorite),
+};
 export {
   getRandomInteger,
   humanizeReleaseDate,
@@ -84,4 +92,5 @@ export {
   generateDate,
   updateItem,
   sortFilm,
+  filter,
 };

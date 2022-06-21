@@ -3,8 +3,8 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { humanizeReleaseDate, getRuntimeFromMins } from '../util';
 import MoviePopupComment from './movie-popup-comment';
 
-const createMovieDetailsTemplate = (film,filteredCommentsArray) => {
-  const {newCommentEmoji} = film;
+const createMovieDetailsTemplate = (film, filteredCommentsArray) => {
+  const { newCommentEmoji } = film;
   const { title, alternativeTitle, ageRating, totalRating, poster, description, director, writers, actors, release, runtime, genre } = film.filmInfo;
 
   const { watchlist, alreadyWatched, favorite } = film.userDetails;
@@ -16,7 +16,7 @@ const createMovieDetailsTemplate = (film,filteredCommentsArray) => {
 
   const createReactionImage = (emoji) => `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">`;
 
-  const renderComments = filteredCommentsArray.map((comment) =>  new MoviePopupComment(comment).template).join('');
+  const renderComments = filteredCommentsArray.map((comment) => new MoviePopupComment(comment).template).join('');
 
   return (
     `<section class="film-details">
@@ -137,22 +137,23 @@ const createMovieDetailsTemplate = (film,filteredCommentsArray) => {
 };
 
 export default class MovieDetails extends AbstractStatefulView {
+  #filteredCommentsArray;
 
-  constructor(film,filteredCommentsArray) {
+  constructor(film, commentsModel) {
     super();
-    this.filteredCommentsArray = filteredCommentsArray;
+    this.#filteredCommentsArray = commentsModel.filter((item) => item.id === film.id);
     this._state = MovieDetails.parseFilmToState(film);
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createMovieDetailsTemplate(this._state, this.filteredCommentsArray);
+    return createMovieDetailsTemplate(this._state, this.#filteredCommentsArray);
   }
 
-  static parseFilmToState = (film) => ({...film, newCommentEmoji: '' });
+  static parseFilmToState = (film) => ({ ...film, newCommentEmoji: '' });
 
   static parseStateToFilm = (state) => {
-    const film = {...state};
+    const film = { ...state };
 
     delete film.newCommentEmoji;
 
@@ -182,7 +183,7 @@ export default class MovieDetails extends AbstractStatefulView {
         break;
     }
 
-    this.updateElement({newCommentEmoji: this._state.newCommentEmoji});
+    this.updateElement({ newCommentEmoji: this._state.newCommentEmoji });
     this.element.scrollTop = scrollPosition;
   };
 
@@ -232,4 +233,16 @@ export default class MovieDetails extends AbstractStatefulView {
   };
 
 
+  setCommentDeleteClickHandler = (callback) => {
+    this._callback.commentDeleteClick = callback;
+    this.element.querySelectorAll('.film-details__comment-delete').forEach((element) => element.addEventListener('click', this.#commentDeleteClickHandler));
+  };
+
+  #commentDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.commentDeleteClick(evt.target);
+  };
+
+
 }
+

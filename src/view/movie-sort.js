@@ -1,13 +1,6 @@
 
 import AbstractView from '../framework/view/abstract-view';
-
-
-const SortType = {
-  DEFAULT: 'default',
-  DATE: 'date',
-  RATING: 'rating',
-};
-
+import { SortType} from '../const';
 
 const createSortTemplate = () =>
   `<ul class="sort">
@@ -38,4 +31,3 @@ export default class MovieSort extends AbstractView {
 }
 
 
-export{SortType,MovieSort};
