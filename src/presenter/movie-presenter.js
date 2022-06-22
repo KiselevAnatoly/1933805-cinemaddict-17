@@ -16,7 +16,7 @@ const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
 };
-export default class MoviePresenter {
+export default class MoviesPresenter {
 
   #contentContainer = null;
   #filmsModel = null;

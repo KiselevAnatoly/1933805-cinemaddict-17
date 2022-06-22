@@ -6,7 +6,7 @@ import { keydownEscape } from '../util';
 import { UserAction, UpdateType, Mode } from '../const';
 import  CommentsModel  from '../model/comments-model';
 
-export default class MoviePresenter2 {
+export default class MoviePresenter {
 
   #filmCardComponent = null;
   #popupComponent = null;

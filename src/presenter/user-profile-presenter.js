@@ -2,6 +2,9 @@ import { render, replace, remove } from '../framework/render';
 import UserRaiting from '../view/user-raiting';
 import { filter } from '../util';
 
+const NOVICE_WATCHED = 11;
+const FAN_WATCHED = 21;
+
 export default class UserProfilePresenter {
   #userProfileContainer = null;
   #filmsModel = null;
@@ -42,11 +45,11 @@ export default class UserProfilePresenter {
   };
 
   #getUserRank = (watchedFilms) => {
-    if (watchedFilms < 11) {
+    if (watchedFilms < NOVICE_WATCHED) {
       return 'Novice';
     }
 
-    if (watchedFilms < 21) {
+    if (watchedFilms < FAN_WATCHED) {
       return 'Fan';
     }
 
