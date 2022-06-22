@@ -15,14 +15,19 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 const FilterType = {
   ALL: 'all',
-  WATCH_LIST: 'watchlist',
+  WATCHLIST: 'watchlist',
   HISTORY: 'history',
-  FAVORITES: 'favorites',
+  FAVORITES: 'favorites'
 };
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  POPUP: 'POPUP',
+};
 
-export{UserAction,UpdateType,FilterType,SortType};
+export{UserAction,UpdateType,FilterType,SortType,Mode};

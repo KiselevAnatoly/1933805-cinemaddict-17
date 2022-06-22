@@ -1,15 +1,22 @@
 
 import AbstractView from '../framework/view/abstract-view';
-const createRatingTemplate = () =>
+const createRatingTemplate = (userRank) =>(
   `<section class="header__profile profile">
-  <p class="profile__rating">Anatoly</p>
-  <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-</section>`;
+    <p class="profile__rating">${userRank}</p>
+    <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+  </section>`
+);
 
 export default class UserRaiting extends AbstractView {
+  #userRank = null;
+
+  constructor(userRank) {
+    super();
+    this.#userRank = userRank;
+  }
 
   get template() {
-    return createRatingTemplate();
+    return createRatingTemplate(this.#userRank);
   }
 
 }

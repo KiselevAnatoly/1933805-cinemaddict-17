@@ -7,52 +7,35 @@ import { render, replace, remove } from '../framework/render';
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
-  #filmModel = null;
-  #scrollTop = null;
+  #filmsModel = null;
 
   #filterComponent = null;
 
-  constructor(filterContainer, filterModel, filmModel) {
+  constructor(filterContainer, filterModel, filmsModel) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
-    this.#filmModel = filmModel;
+    this.#filmsModel = filmsModel;
 
-    this.#filmModel.addObserver(this.#handleModelEvent);
+    this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get filters() {
-    const films = this.#filmModel.films;
+    const films = this.#filmsModel.films;
 
-    return [
-      {
-        type: FilterType.ALL,
-        name: 'all',
-        count: filter[FilterType.ALL](films).length,
-      },
-      {
-        type: FilterType.WATCH_LIST,
-        name: 'watchlist',
-        count: filter[FilterType.WATCH_LIST](films).length,
-      },
-      {
-        type: FilterType.HISTORY,
-        name: 'history',
-        count: filter[FilterType.HISTORY](films).length,
-      },
-      {
-        type: FilterType.FAVORITES,
-        name: 'favorites',
-        count: filter[FilterType.FAVORITES](films).length,
-      },
-    ];
+    return {
+      [FilterType.ALL]: {name: 'All movies', count: filter[FilterType.ALL](films).length},
+      [FilterType.WATCHLIST]: {name: 'Watchlist ', count: filter[FilterType.WATCHLIST](films).length},
+      [FilterType.HISTORY]: {name: 'History ', count: filter[FilterType.HISTORY](films).length},
+      [FilterType.FAVORITES]: {name: 'Favorites ', count: filter[FilterType.FAVORITES](films).length}
+    };
   }
 
   init () {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = new MovieNavigation(this.#filmModel.films, filters, this.#filterModel.filter);
+    this.#filterComponent = new MovieNavigation(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
