@@ -4,9 +4,9 @@ import MovieCard from '../view/movie-card';
 import { render, remove, replace } from '../framework/render';
 import { keydownEscape } from '../util';
 import { UserAction, UpdateType, Mode } from '../const';
-import  CommentsModel  from '../model/comment-model';
+import  CommentsModel  from '../model/comments-model';
 
-export default class FilmPresenter {
+export default class MoviePresenter2 {
 
   #filmCardComponent = null;
   #popupComponent = null;

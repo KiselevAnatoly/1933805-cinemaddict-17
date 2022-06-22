@@ -2,7 +2,7 @@ import { UpdateType } from '../const';
 import Observable from '../framework/observable';
 
 
-export default class MovieModel extends Observable {
+export default class MovieCardModel extends Observable {
   #filmsApiService = null;
   #films = [];
 

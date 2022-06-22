@@ -2,7 +2,7 @@ import { render, remove } from '../framework/render';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import MovieView from '../view/movie-films';
 import MovieList from '../view/movie-list';
-import MovieListContainer from '../view/movie-container';
+import MovieContainer from '../view/movie-container';
 import ButtonShowMore from '../view/button-show-more';
 import MovieSort from '../view/movie-sort';
 import { sortByDate, filter, sortByRating } from '../util';
@@ -16,7 +16,7 @@ const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
 };
-export default class FilmSectionPresenter {
+export default class MoviePresenter {
 
   #contentContainer = null;
   #filmsModel = null;
@@ -33,7 +33,7 @@ export default class FilmSectionPresenter {
 
   #sectionFilmsComponent = new MovieView();
   #filmsListComponent = new MovieList();
-  #filmsContainerComponent = new MovieListContainer();
+  #filmsContainerComponent = new MovieContainer();
   #loadingComponent = new LoadingView();
 
   #filmPresentersMap = new Map();
