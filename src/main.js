@@ -1,5 +1,5 @@
 
-import MoviesPresenter from './presenter/movie-presenter';
+import BoardPresenter from './presenter/board-presenter';
 import FilterPresenter from './presenter/filter-presenter';
 import UserProfilePresenter from './presenter/user-profile-presenter';
 import MovieCardModel from './model/movie-card-model';
@@ -15,13 +15,12 @@ const siteMainElement = document.querySelector('.main');
 const filmApiService = new ApiService(END_POINT, AUTHORIZATION);
 const filmsModel = new MovieCardModel(filmApiService);
 const filterModel = new FilterModel();
-const contentPresenter = new MoviesPresenter(siteMainElement, filmsModel, filterModel, filmApiService);
+const boardPresenter = new BoardPresenter(siteMainElement, filmsModel, filterModel, filmApiService);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
 const userProfilePresenter = new UserProfilePresenter(siteHeaderElement, filmsModel);
 
-
 filterPresenter.init();
-contentPresenter.init();
+boardPresenter.init();
 filmsModel.init();
 userProfilePresenter.init();
 
