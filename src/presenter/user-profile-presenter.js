@@ -1,62 +1,33 @@
-import { render, replace, remove } from '../framework/render';
+import { render, remove } from '../framework/render';
 import UserRaiting from '../view/user-raiting';
-import { filter } from '../util';
-
-const NOVICE_WATCHED = 11;
-const FAN_WATCHED = 21;
-
+const Ranking = {
+  noRank: (filmsLength, prevRank) => filmsLength === 0 ? ' ': prevRank,
+  novice : (filmsLength, prevRank)=>filmsLength >= 1 && filmsLength <= 10 ? 'novice': prevRank,
+  fan: (filmsLength, prevRank)=>filmsLength >= 11 && filmsLength <= 20? 'fan': prevRank,
+  movieBuff: (filmsLength, prevRank)=> filmsLength >= 21 ? 'movie buff': prevRank,
+};
 export default class UserProfilePresenter {
-  #userProfileContainer = null;
-  #filmsModel = null;
-
-  #userProfileComponent = null;
-
-  constructor(userProfileContainer, filmsModel) {
-    this.#userProfileContainer = userProfileContainer;
-    this.#filmsModel = filmsModel;
-
-    this.#filmsModel.addObserver(this.#handleModelEvent);
+  #place = null;
+  #avatarRank = null;
+  constructor(place) {
+    this.#place = place;
   }
 
-  init = () => {
-    const previousUserProfileComponent = this.#userProfileComponent;
-    const watchedFilms = filter.history(this.#filmsModel.films).length;
+  init (filmCardModel) {
+    const rank = this.#rankLevel(filmCardModel.filter((film)=> film.userDetails.alreadyWatched === true).length);
+    this.#avatarRank = new UserRaiting(rank);
+    render( this.#avatarRank, this.#place);
+  }
 
-    if (watchedFilms === 0) {
-      if (previousUserProfileComponent !== null) {
-        remove(previousUserProfileComponent);
-        this.#userProfileComponent = null;
-      }
+  destroy() {
+    remove(this.#avatarRank);
+  }
 
-      return;
+  #rankLevel (filmLengths) {
+    let rank = '';
+    for(const key in Ranking) {
+      rank = Ranking[key](filmLengths,rank);
     }
-
-    const userRank = this.#getUserRank(watchedFilms);
-
-    this.#userProfileComponent = new UserRaiting(userRank);
-
-    if (previousUserProfileComponent === null) {
-      render(this.#userProfileComponent, this.#userProfileContainer);
-      return;
-    }
-
-    replace(this.#userProfileComponent, previousUserProfileComponent);
-    remove(previousUserProfileComponent);
-  };
-
-  #getUserRank = (watchedFilms) => {
-    if (watchedFilms < NOVICE_WATCHED) {
-      return 'Novice';
-    }
-
-    if (watchedFilms < FAN_WATCHED) {
-      return 'Fan';
-    }
-
-    return 'Movie Buff';
-  };
-
-  #handleModelEvent = () => {
-    this.init();
-  };
+    return rank;
+  }
 }

@@ -2,52 +2,33 @@
 import AbstractView from '../framework/view/abstract-view';
 import { SortType} from '../const';
 
-const createSortTemplate = (sort) => {
-  const defaultSortActive = sort === SortType.DEFAULT
-    ? 'sort__button--active'
-    : '';
+const createSortTemplate = (currentSortType) => `<ul class="sort">
+<li><a href="#" class="sort__button ${ currentSortType === SortType.DEFAULT ? 'sort__button--active' : ''} " data-sort-type = ${SortType.DEFAULT} >Sort by default</a></li>
+<li><a href="#" class="sort__button ${ currentSortType === SortType.DATA ? 'sort__button--active' : ''}" data-sort-type = ${SortType.DATA}>Sort by date</a></li>
+<li><a href="#" class="sort__button ${ currentSortType === SortType.RATING ? 'sort__button--active' : ''}" data-sort-type = ${SortType.RATING}>Sort by rating</a></li>
+</ul>`;
 
-  const dateSortActive = sort === SortType.DATE
-    ? 'sort__button--active'
-    : '';
-
-  const ratingSortActive = sort === SortType.RATING
-    ? 'sort__button--active'
-    : '';
-
-  return (
-    `<ul class="sort">
-      <li><a href="#" class="sort__button ${defaultSortActive}" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
-      <li><a href="#" class="sort__button ${dateSortActive}" data-sort-type="${SortType.DATE}">Sort by date</a></li>
-      <li><a href="#" class="sort__button ${ratingSortActive}" data-sort-type="${SortType.RATING}">Sort by rating</a></li>
-    </ul>`
-  );
-};
 export default class MovieSort extends AbstractView {
-  #sort = null;
-
-  constructor(sort) {
+  #currentSortType = SortType.DEFAULT;
+  constructor(currentSortType) {
     super();
-    this.#sort = sort;
+    this.#currentSortType = currentSortType;
   }
 
   get template() {
-    return createSortTemplate(this.#sort);
+    return createSortTemplate (this.#currentSortType);
   }
 
-  setSortTypeChangeHandler = (callback) => {
-    this._callback.sortTypeChange = callback;
-    this.element.addEventListener('click', this.handleSortTypeChange);
-  };
-
-  handleSortTypeChange = (evt) => {
+  #sortClickHandler= (evt) => {
     if (evt.target.tagName !== 'A') {
       return;
     }
-
     evt.preventDefault();
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
+    this._callback.click(evt.target.dataset.sortType);
+  };
+
+  setClickTypeSortHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#sortClickHandler);
   };
 }
-
-

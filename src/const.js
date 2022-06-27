@@ -1,17 +1,17 @@
 
 const SortType = {
   DEFAULT: 'default',
-  DATE: 'date',
-  RATING: 'rating',
+  DATA: 'date',
+  RATING: 'rating'
 };
 
-const UserAction = {
+const UserAction  = {
   UPDATE_FILM: 'UPDATE_FILM',
-  ADD_COMMENT: 'ADD_COMMENT',
-  DELETE_COMMENT: 'DELETE_COMMENT',
+  ADD_FILM_COMMENT: 'ADD_FILM_COMMENT',
+  DELETE_COMMENT: 'DELETE_FILM_COMMENT',
 };
 
-const UpdateType = {
+const UpdateType  = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
@@ -19,15 +19,19 @@ const UpdateType = {
 };
 
 const FilterType = {
-  ALL: 'all',
-  WATCHLIST: 'watchlist',
-  HISTORY: 'history',
-  FAVORITES: 'favorites'
+  All: 'all',
+  WATCH_LIST:'watchList',
+  ALREADY_WATCHED:'alreadyWatched',
+  FAVORITE:'favorite'
 };
 
 const Mode = {
   DEFAULT: 'DEFAULT',
   POPUP: 'POPUP',
 };
-
-export{UserAction,UpdateType,FilterType,SortType,Mode};
+const ShakeClass = {
+  POPUP_COMMENTS : '.film-details__comments-wrap',
+  POPUP :'.film-details__inner',
+  POPUP_DETAILS: '.film-details__controls'
+};
+export{UserAction,UpdateType,FilterType,SortType,Mode,ShakeClass};

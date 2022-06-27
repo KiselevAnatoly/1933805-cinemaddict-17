@@ -1,27 +1,25 @@
-
-import BoardPresenter from './presenter/board-presenter';
-import FilterPresenter from './presenter/filter-presenter';
 import UserProfilePresenter from './presenter/user-profile-presenter';
+import BoardPresenter from './presenter/board-presenter';
 import MovieCardModel from './model/movie-card-model';
-import FilterModel from './model/filter-model';
-import ApiService from './api-service';
+import CommentsModel from './model/comments-model';
+import FilmsApiService from './api-serv';
+import { render } from './framework/render';
+import MovieList from './view/movie-list';
 
 
 const AUTHORIZATION = 'Basic Anatoly';
 const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 
 const siteHeaderElement = document.querySelector('.header');
-const siteMainElement = document.querySelector('.main');
-const filmApiService = new ApiService(END_POINT, AUTHORIZATION);
+const userProfilePresenter = new UserProfilePresenter(siteHeaderElement);
+const main = document.querySelector('.main');
+const body = document.querySelector('body');
+const filmApiService = new FilmsApiService(END_POINT, AUTHORIZATION);
 const filmsModel = new MovieCardModel(filmApiService);
-const filterModel = new FilterModel();
-const boardPresenter = new BoardPresenter(siteMainElement, filmsModel, filterModel, filmApiService);
-const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
-const userProfilePresenter = new UserProfilePresenter(siteHeaderElement, filmsModel);
-
-filterPresenter.init();
-boardPresenter.init();
+const filmsComment = new CommentsModel(filmApiService);
 filmsModel.init();
-userProfilePresenter.init();
-
-
+render(new MovieList(), main);
+const filmsContainer = main.querySelector('.films-list__container');
+const filmsCatalogPresenter = new BoardPresenter
+(filmsContainer, filmsModel, body, filmsComment, userProfilePresenter);
+filmsCatalogPresenter.init();

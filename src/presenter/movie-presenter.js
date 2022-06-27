@@ -1,266 +1,101 @@
 
-import MovieDetails from '../view/movie-details';
+import PopupFilmPresenter from '../presenter/popup-film-presenter';
 import MovieCard from '../view/movie-card';
-import { render, remove, replace } from '../framework/render';
-import { keydownEscape } from '../util';
-import { UserAction, UpdateType, Mode } from '../const';
-import  CommentsModel  from '../model/comments-model';
+import { render, remove } from '../framework/render';
+import { ControlDetailsFilmCard } from '../util';
+import { UserAction, UpdateType } from '../const';
+
 
 export default class MoviePresenter {
-
-  #filmCardComponent = null;
-  #popupComponent = null;
-  #filmsContainerComponent = null;
-  #film = null;
-  #changeData = null;
-  #changeMode = null;
-  #commentsModel = null;
-  #mode = Mode.DEFAULT;
-  #popupScroll = 0;
-  #filmApiService = null;
-  #uiBlocker = null;
-
-  constructor(filmsContainer, changeData, changeMode, filmApiService, uiBlocker) {
-    this.#filmsContainerComponent = filmsContainer.element;
-    this.#changeData = changeData;
-    this.#changeMode = changeMode;
-    this.#filmApiService = filmApiService;
-    this.#uiBlocker = uiBlocker;
-
-    this.#commentsModel = new CommentsModel(this.#filmApiService);
-    this.#commentsModel.addObserver(this.#handleCommentsModelEvent);
+  #filmsContainer = null;
+  #filmCard = null;
+  constructor(filmsContainer, body, renderFilmsCard, openPopup, filmComments) {
+    this.#filmsContainer = filmsContainer;
+    this.body = body;
+    this.renderFilmsCard = renderFilmsCard;
+    this.openPopup = openPopup;
+    this.filmCommits = filmComments;
+    this.filmControlDetailId = null;
   }
 
-  get comments() {
-    return this.#commentsModel.comments;
+  get filmControlDetail() {
+    return this.filmControlDetailId;
   }
 
-  init = (film) => {
-    this.#film = film;
-    this.#commentsModel.init(film);
+  init = (filmModel) => {
+    this.filmCardModel = filmModel;
+    this.#filmCard = new MovieCard(this.filmCardModel);
+    render(this.#filmCard, this.#filmsContainer);
+    this.#filmCard.setClickOpenPopupHandler(this.#setClickPopupHandler);
+    this.#filmCard.setFilmDetailsControlHandler(this.#getFilmDetailsControlButton);
 
-    this.renderComponents();
-  };
-
-  renderComponents = () => {
-    const previousFilmCardComponent = this.#filmCardComponent;
-    const previousPopupComponent = this.#popupComponent;
-
-    this.#filmCardComponent = new MovieCard(this.#film);
-    this.#popupComponent = new MovieDetails(this.#film, this.comments);
-
-    this.#filmCardComponent.setClickHandler(this.#handleFilmCardClick);
-
-    this.#popupComponent.setClickHandler(this.#handlePopupCloseButtonClick);
-
-    this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    this.#filmCardComponent.setHistoryClickHandler(this.#handleHistoryClick);
-    this.#filmCardComponent.setFavoritesClickHandler(this.#handleFavoritesClick);
-
-    this.#popupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    this.#popupComponent.setHistoryClickHandler(this.#handleHistoryClick);
-    this.#popupComponent.setFavoritesClickHandler(this.#handleFavoritesClick);
-    this.#popupComponent.setDeleteClickHandlers(this.#handleCommentDelete);
-    this.#popupComponent.setCommentSubmitHandler(this.#handleCommentSubmit);
-
-    if (previousFilmCardComponent === null || previousPopupComponent === null) {
-      render(this.#filmCardComponent, this.#filmsContainerComponent);
-      if (this.#mode === Mode.POPUP) {
-        this.#openPopup();
-      }
-      return;
-    }
-
-    replace(this.#filmCardComponent, previousFilmCardComponent);
-    replace(this.#popupComponent, previousPopupComponent);
-
-    if (this.#mode === Mode.POPUP) {
-      this.#openPopup();
-    }
-
-    remove(previousFilmCardComponent);
-    remove(previousPopupComponent);
-  };
-
-  setPopupOpen = () => {
-    this.#mode = Mode.POPUP;
-  };
-
-  setPopupScroll = (scroll) => {
-    this.#popupScroll = scroll;
   };
 
   destroy = () => {
-    this.#closePopup();
-    remove(this.#filmCardComponent);
-    remove(this.#popupComponent);
+    remove(this.#filmCard);
   };
 
-  resetView = () => {
-    if (this.#mode !== Mode.DEFAULT) {
-      this.#closePopup();
-    }
+  initPopup = () => {
+    this.openPopup.open.init(this.body, this.filmCardModel, this.filmCommits, this.openPopup);
   };
 
-  setSubmitting = () => {
-    this.#popupComponent.updateElement({
-      isDisabled: true,
-    });
-    this.#popupComponent.element.scroll(0, this.#popupScroll);
+
+  resetPopup = (filmInfo, disabled) => {
+    this.filmCardModel = filmInfo;
+    this.#filmCard.reset(filmInfo, disabled);
+    this.openPopup.open.update(filmInfo, this.openPopup.open);
   };
 
-  setDeleting = (commentId) => {
-    this.#popupComponent.updateElement({
-      isDisabled: true,
-      commentBeingDeleted: commentId,
-    });
-    this.#popupComponent.element.scroll(0, this.#popupScroll);
-  };
-
-  setAborting = (actionType) => {
-    const resetState = () => {
-      this.#popupComponent.updateElement({
-        isDisabled: false,
-        commentBeingDeleted: null,
-      });
-      this.#popupComponent.element.scroll(0, this.#popupScroll);
-    };
-
-    const controlButtonsClass = '.film-details__controls';
-    const newCommentClass = '.film-details__new-comment';
-    const commentsListClass = '.film-details__comments-list';
-
-    switch (actionType) {
-      case UserAction.UPDATE_FILM:
-        if (this.#mode === Mode.DEFAULT) {
-          this.#filmCardComponent.shake();
-          return;
-        }
-
-        this.#popupComponent.shake(resetState, controlButtonsClass);
+  resetFilmCard = (ControlDetails, film) => {
+    switch (ControlDetails) {
+      case ControlDetailsFilmCard.UNBLOCK_CONTROL_PANEL:
+        this.#filmCard.unblock();
         break;
-      case UserAction.ADD_COMMENT:
-        this.#popupComponent.shake(resetState, newCommentClass);
+      case ControlDetailsFilmCard.UPDATE_CONTROL_PANEL:
+        this.#filmCard.reset(film);
+    }
+  };
+
+  #isPopupOpen() {
+    if (this.openPopup.open !== null) {
+      this.openPopup.open.remove();
+    }
+  }
+
+  #getFilmDetailsControlButton = (evt) => {
+    while (evt.target.id) {
+      if (evt.target.id === 'watchList') {
+        this.filmControlDetailId = evt.target.id;
+        this.#filmCard.block();
+        const updateFilm = this.filmCardModel;
+        updateFilm.userDetails.watchlist = !updateFilm.userDetails.watchlist;
+        this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
-      case UserAction.DELETE_COMMENT:
-        this.#popupComponent.shake(resetState, commentsListClass);
+      }
+      if (evt.target.id === 'alreadyWatched') {
+        this.filmControlDetailId = evt.target.id;
+        this.#filmCard.block();
+        const updateFilm = this.filmCardModel;
+        updateFilm.userDetails.alreadyWatched = !updateFilm.userDetails.alreadyWatched;
+        this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
-    }
-  };
-
-  #openPopup = () => {
-    render(this.#popupComponent, document.body);
-    this.#popupComponent.element.scroll(0, this.#popupScroll);
-    document.body.classList.add('hide-overflow');
-    this.#mode = Mode.POPUP;
-    document.addEventListener('keydown', this.#handleEscKeyDown);
-  };
-
-  #closePopup = () => {
-    remove(this.#popupComponent);
-    document.body.classList.remove('hide-overflow');
-    this.#mode = Mode.DEFAULT;
-    this.#popupScroll = 0;
-    this.renderComponents();
-    document.removeEventListener('keydown', this.#handleEscKeyDown);
-  };
-
-  #handleEscKeyDown = (evt) => {
-    if (keydownEscape(evt)) {
-      evt.preventDefault();
-      this.#closePopup();
-    }
-  };
-
-  #handleFilmCardClick = () => {
-    this.#changeMode();
-    this.#openPopup();
-  };
-
-  #handlePopupCloseButtonClick = () => {
-    this.#closePopup();
-  };
-
-  #handleWatchlistClick = () => {
-    this.#popupScroll = this.#popupComponent.element.scrollTop;
-    this.#changeData(
-      UserAction.UPDATE_FILM,
-      UpdateType.MINOR,
-      {...this.#film, userDetails: {...this.#film.userDetails,
-        watchlist: !this.#film.userDetails.watchlist},
-      },
-      this.#mode,
-      this.#popupScroll,
-    );
-  };
-
-  #handleHistoryClick = () => {
-    this.#popupScroll = this.#popupComponent.element.scrollTop;
-    this.#changeData(
-      UserAction.UPDATE_FILM,
-      UpdateType.MINOR,
-      {...this.#film, userDetails: {...this.#film.userDetails,
-        alreadyWatched: !this.#film.userDetails.alreadyWatched},
-      },
-      this.#mode,
-      this.#popupScroll,
-    );
-  };
-
-  #handleFavoritesClick = () => {
-    this.#popupScroll = this.#popupComponent.element.scrollTop;
-    this.#changeData(
-      UserAction.UPDATE_FILM,
-      UpdateType.MINOR,
-      {...this.#film, userDetails: {...this.#film.userDetails,
-        favorite: !this.#film.userDetails.favorite},
-      },
-      this.#mode,
-      this.#popupScroll,
-    );
-  };
-
-  #handleCommentsModelEvent = (update) => {
-    switch (update) {
-      case UpdateType.INIT:
-        this.renderComponents();
+      }
+      if (evt.target.id === 'favorite') {
+        this.filmControlDetailId = evt.target.id;
+        this.#filmCard.block();
+        const updateFilm = { ...this.filmCardModel };
+        updateFilm.userDetails.favorite = !updateFilm.userDetails.favorite;
+        this.renderFilmsCard(UserAction.UPDATE_FILM, UpdateType.MINOR, updateFilm);
         break;
-      default:
-        this.#changeData(
-          update,
-          UpdateType.PATCH,
-          this.#film,
-          this.#mode,
-          this.#popupScroll,
-        );
+      }
+      break;
     }
+
   };
 
-  #handleCommentDelete = async (commentId, scroll) => {
-    this.#popupScroll = scroll;
-    this.setDeleting(commentId);
-    this.#uiBlocker.block();
-
-    try {
-      await this.#commentsModel.deleteComment(commentId);
-    } catch(err) {
-      this.setAborting(UserAction.DELETE_COMMENT);
-    }
-
-    this.#uiBlocker.unblock();
-  };
-
-  #handleCommentSubmit = async (localComment, scroll) => {
-    this.#popupScroll = scroll;
-    this.setSubmitting();
-    this.#uiBlocker.block();
-
-    try {
-      await this.#commentsModel.addComment(localComment, this.#film);
-    } catch(err) {
-      this.setAborting(UserAction.ADD_COMMENT);
-    }
-
-    this.#uiBlocker.unblock();
+  #setClickPopupHandler = () => {
+    this.#isPopupOpen();
+    this.openPopup.open = new PopupFilmPresenter(this.renderFilmsCard);
+    this.filmCommits.init(this.filmCardModel);
   };
 }
