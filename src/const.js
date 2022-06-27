@@ -19,7 +19,7 @@ const UpdateType  = {
 };
 
 const FilterType = {
-  All: 'all',
+  ALL: 'all',
   WATCH_LIST:'watchList',
   ALREADY_WATCHED:'alreadyWatched',
   FAVORITE:'favorite'

@@ -6,7 +6,8 @@ import FilterPresenter from './filter-presenter';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import ButtonShowMore from '../view/button-show-more';
 import MovieSort from '../view/movie-sort';
-import { sortFilmDate, filter, sortFilmRating, } from '../util';
+import StatisticsView from '../view/statistics-view';
+import { sortFilmDate, filterFilms, sortFilmRating, } from '../util';
 import { SortType, UserAction, UpdateType, ShakeClass} from '../const';
 import LoadingView from '../view/loading-view';
 import { ControlDetailsFilmCard } from '../util';
@@ -54,7 +55,7 @@ export default class BoardPresenter {
   get filmsModelsFiltered () {
     const filmsModelsBase = this.#filmsCardModel.films;
     const filterType = this.#filterNavMenu.filter;
-    const filmsModelsFiltered = filter[filterType](filmsModelsBase);
+    const filmsModelsFiltered = filterFilms[filterType](filmsModelsBase);
     switch (this.#currentSortType) {
       case SortType.DATA:
         return [...filmsModelsFiltered].sort(sortFilmDate);
@@ -111,16 +112,17 @@ export default class BoardPresenter {
   };
 
   #renderFilmsBoard = () => {
-    if(this.#isLoading){
+    if(this.#isLoading) {
       this.#renderFilmLoading();
       return;
     }
     this.#avatarRankPresenter.init(this.#filmsCardModel.films);
+
     const filmsModelsLength = this.filmsModelsFiltered.length;
     if(filmsModelsLength === 0) {
       this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu, this.#filmsCardModel);
       this.#renderNoFilmsCards();
-    }else {
+    } else {
       this.#renderSort();
       this.#navMenuPresenter.init(this.menuPlace, this.#filterNavMenu, this.#filmsCardModel);
       const films = this.filmsModelsFiltered.slice(0, Math.min(filmsModelsLength,this.#filmRenderCount));
@@ -129,6 +131,7 @@ export default class BoardPresenter {
         this.#renderShowMoreButton();
       }
     }
+    this.#renderFooterStatistics();
   };
 
   #clearFilmBoard = ({resetRenderedFilmsCount = false, resetSortType = false}={}) => {
@@ -240,6 +243,12 @@ export default class BoardPresenter {
         break;
 
     }
+  };
+
+  #renderFooterStatistics = () => {
+    const statisticsContainer = document.querySelector('.footer__statistics');
+    statisticsContainer.innerHTML = '';
+    render(new StatisticsView(this.#filmsCardModel.films), statisticsContainer);
   };
 
   clickMoreFilmsButtonHandler = () => {

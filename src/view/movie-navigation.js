@@ -5,8 +5,8 @@ const createNavigationTemplate = (films, filterModels) => {
   const {wishlist, history, favorites} = films;
   return (`<nav class="main-navigation">
 <a href="#all" class="main-navigation__item
-${(filterModels === FilterType.All) ? 'main-navigation__item--active' : '' } "
- data-filter-type = ${FilterType.All}>All movies</a>
+${(filterModels === FilterType.ALL) ? 'main-navigation__item--active' : '' } "
+ data-filter-type = ${FilterType.ALL}>All movies</a>
 <a href="#watchList" class="main-navigation__item
 ${(filterModels === FilterType.WATCH_LIST) ? 'main-navigation__item--active' : '' }"
 data-filter-type = ${FilterType.WATCH_LIST}>WatchList <span class="main-navigation__item-count">${wishlist}</span></a>

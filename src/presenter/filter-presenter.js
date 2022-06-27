@@ -1,6 +1,6 @@
 import { FilterType, UpdateType } from '../const';
 import MovieNavigation from '../view/movie-navigation';
-import { filter } from '../util';
+import { filterFilms } from '../util';
 import { render, RenderPosition, remove } from '../framework/render';
 
 
@@ -10,11 +10,11 @@ export default class FilterPresenter {
   #navMenuPlace = null;
 
   getFilmsFilterLength = (films) => {
-    const filterFilms = films;
+    const filteredFilms = films;
     return ({
-      wishlist: filter[FilterType.WATCH_LIST](filterFilms).length,
-      history: filter[FilterType.ALREADY_WATCHED](filterFilms).length,
-      favorites: filter[FilterType.FAVORITE](filterFilms).length,
+      wishlist: filterFilms[FilterType.WATCH_LIST](filteredFilms).length,
+      history: filterFilms[FilterType.ALREADY_WATCHED](filteredFilms).length,
+      favorites: filterFilms[FilterType.FAVORITE](filteredFilms).length,
     });
   };
 
@@ -25,7 +25,7 @@ export default class FilterPresenter {
     this.filterNavMenu = filterNavMenu;
     this.#navMenu = new MovieNavigation(filterLength, this.filterNavMenu);
     render(this.#navMenu, this.#navMenuPlace, RenderPosition.AFTERBEGIN);
-    this.#navMenu.setClickNavHandler(this.#filterChang);
+    this.#navMenu.setClickNavHandler(this.#filterChange);
   };
 
   reset = (films) => {
@@ -34,7 +34,7 @@ export default class FilterPresenter {
     this.#navMenu.reset(filterLength);
   };
 
-  #filterChang = (filterType) => {
+  #filterChange = (filterType) => {
     if (this.filterNavMenu.filters === filterType) {
       return;
     }
